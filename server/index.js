@@ -16,7 +16,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    console.log("DB Connection Successfull");
+    console.log("DB Connetion Successfull");
   })
   .catch((err) => {
     console.log(err.message);
@@ -30,7 +30,7 @@ const server = app.listen(process.env.PORT, () =>
 );
 const io = socket(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://frontend-0izi.onrender.com/",
     credentials: true,
   },
 });
