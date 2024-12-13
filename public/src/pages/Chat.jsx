@@ -12,19 +12,21 @@ export default function Chat() {
   const navigate = useNavigate();
   const socket = useRef();
   const [contacts, setContacts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
   const [currentChat, setCurrentChat] = useState(undefined);
   const [currentUser, setCurrentUser] = useState(undefined);
-  useEffect(async () => {
+
+  useEffect(() => {
     if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
       navigate("/login");
     } else {
       setCurrentUser(
-        await JSON.parse(
-          localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-        )
+        JSON.parse(localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY))
       );
     }
-  }, []);
+  }, [navigate]);
+
   useEffect(() => {
     if (currentUser) {
       socket.current = io(host);
@@ -32,24 +34,49 @@ export default function Chat() {
     }
   }, [currentUser]);
 
-  useEffect(async () => {
-    if (currentUser) {
-      if (currentUser.isAvatarImageSet) {
-        const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
-        setContacts(data.data);
-      } else {
-        navigate("/setAvatar");
+  useEffect(() => {
+    const fetchContacts = async () => {
+      if (currentUser) {
+        if (currentUser.isAvatarImageSet) {
+          const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
+          setContacts(data.data);
+          setSearchResults(data.data); // Initialize search results with all contacts
+        } else {
+          navigate("/setAvatar");
+        }
       }
+    };
+    fetchContacts();
+  }, [currentUser, navigate]);
+
+  useEffect(() => {
+    if (searchQuery.trim()) {
+      const filtered = contacts.filter((contact) =>
+        contact.username.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setSearchResults(filtered);
+    } else {
+      setSearchResults(contacts);
     }
-  }, [currentUser]);
+  }, [searchQuery, contacts]);
+
   const handleChatChange = (chat) => {
     setCurrentChat(chat);
   };
+
   return (
     <>
       <Container>
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Search contacts..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
         <div className="container">
-          <Contacts contacts={contacts} changeChat={handleChatChange} />
+          <Contacts contacts={searchResults} changeChat={handleChatChange} />
           {currentChat === undefined ? (
             <Welcome />
           ) : (
@@ -68,11 +95,31 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   gap: 1rem;
-  align-items: center;
+  // margin-left:5%;
+  // align-items: center;
   background-color: #131324;
+
+  .search-container {
+    width: 18%;
+    margin-left:2%;
+    height: 7%;
+    padding: 0.5%;
+    background-color: #1a1a2e;
+    input {
+      width: 100%;
+      padding: 8px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      color: white;
+      background-color: #2a2a4a;
+      outline: none;
+    }
+  }
+
   .container {
-    height: 85vh;
-    width: 85vw;
+    height: 90vh;
+    width: 100vw;
     background-color: #00000076;
     display: grid;
     grid-template-columns: 25% 75%;
