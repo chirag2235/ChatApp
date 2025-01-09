@@ -13,7 +13,7 @@ export default function Welcome() {
   }, []);
   return (
     <Container>
-    <div className="log"><Logout/></div>
+    {/* <div className="log"><Logout/></div> */}
       <img src={Robot} alt="" />
       <h1>
         Welcome, <span>{userName}!</span>
@@ -27,15 +27,36 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
   flex-direction: column;
+  background-color: #191414; /* Spotify dark background */
+  color: #b3b3b3; /* Muted gray text */
+  height: 100vh;
+  text-align: center;
+
   img {
-    height: 20rem;
+    height: 15rem; /* Adjusted for better responsiveness */
+    margin-bottom: 1rem;
   }
-  span {
-    color: #4e0eff;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ffffff; /* Bright white for main heading */
+    margin-bottom: 0.5rem;
+
+    span {
+      color: #1db954; /* Spotify green for username */
+    }
   }
-  .log{
-    margin:10px 15px auto auto;
+
+  h3 {
+    font-size: 1.2rem;
+    color: #b3b3b3; /* Muted text for the subheading */
+  }
+
+  .log {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
   }
 `;

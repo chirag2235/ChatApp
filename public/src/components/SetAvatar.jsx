@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { setAvatarRoute } from "../utils/APIRoutes";
+import Loader from "../assets/loader";
 export default function SetAvatar() {
   const api = `https://api.multiavatar.com/4645646`;
   const navigate = useNavigate();
@@ -68,7 +69,8 @@ export default function SetAvatar() {
     <>
       {isLoading ? (
         <Container>
-          <img src={loader} alt="loader" className="loader" />
+          {/* <img src={loader} alt="loader" className="loader" /> */}
+          <Loader/>
         </Container>
       ) : (
         <Container>
@@ -109,7 +111,7 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   gap: 3rem;
-  background-color: #131324;
+  background-color: #121212; /* Spotify dark background */
   height: 100vh;
   width: 100vw;
 
@@ -119,9 +121,13 @@ const Container = styled.div`
 
   .title-container {
     h1 {
-      color: white;
+      color: #ffffff; /* White text */
+      font-size: 2rem;
+      text-align: center;
+      font-weight: bold;
     }
   }
+
   .avatars {
     display: flex;
     gap: 2rem;
@@ -139,13 +145,15 @@ const Container = styled.div`
         transition: 0.5s ease-in-out;
       }
     }
+
     .selected {
-      border: 0.4rem solid #4e0eff;
+      border: 0.4rem solid #1db954; /* Spotify green for selected avatar */
     }
   }
+
   .submit-btn {
-    background-color: #4e0eff;
-    color: white;
+    background-color: #1db954; /* Spotify green */
+    color: #ffffff; /* White text */
     padding: 1rem 2rem;
     border: none;
     font-weight: bold;
@@ -153,8 +161,10 @@ const Container = styled.div`
     border-radius: 0.4rem;
     font-size: 1rem;
     text-transform: uppercase;
+    transition: background-color 0.3s ease-in-out;
+
     &:hover {
-      background-color: #4e0eff;
+      background-color: #148c3a; /* Darker green for hover effect */
     }
   }
 `;

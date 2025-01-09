@@ -7,6 +7,7 @@ import { allUsersRoute, host } from "../utils/APIRoutes";
 import ChatContainer from "../components/ChatContainer";
 import Contacts from "../components/Contacts";
 import Welcome from "../components/Welcome";
+import Logout from "../components/Logout";
 
 export default function Chat() {
   const navigate = useNavigate();
@@ -75,6 +76,10 @@ export default function Chat() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
+        <div className="logout-container">
+          <Logout />
+        </div>
+
         <div className="container">
           <Contacts contacts={searchResults} changeChat={handleChatChange} />
           {currentChat === undefined ? (
@@ -93,18 +98,21 @@ const Container = styled.div`
   width: 100vw;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 1rem;
-  // margin-left:5%;
-  // align-items: center;
-  background-color: #131324;
+  background-color: #121212; /* Spotify-like dark background */
 
   .search-container {
-    width: 18%;
-    margin-left:2%;
+    width: 20%;
+    margin-left: 2%;
+    margin-top: 2%;
     height: 7%;
     padding: 0.5%;
-    background-color: #1a1a2e;
+    background-color: #1e1e1e; /* Darker search container */
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+
     input {
       width: 100%;
       padding: 8px;
@@ -112,19 +120,77 @@ const Container = styled.div`
       border-radius: 5px;
       font-size: 16px;
       color: white;
-      background-color: #2a2a4a;
+      background-color: #2a2a2a; /* Subtle dark background for input */
       outline: none;
+      transition: background-color 0.3s ease;
+
+      &:focus {
+        background-color: #333333;
+        border: 0.1rem solid #1db954; /* Spotify green */
+        outline: none;
+      }
+    }
+  }
+
+  .logout-container {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    z-index: 10;
+
+    button {
+      background-color: #1db954; /* Spotify green */
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #1ed760;
+      }
     }
   }
 
   .container {
     height: 90vh;
     width: 100vw;
-    background-color: #00000076;
+    background: linear-gradient(135deg, #181818, #282828); /* Gradient background */
     display: grid;
     grid-template-columns: 25% 75%;
+
     @media screen and (min-width: 720px) and (max-width: 1080px) {
       grid-template-columns: 35% 65%;
     }
+  }
+
+  /* Contacts section */
+  .contacts {
+    background-color: #242424; /* Dark sidebar */
+    color: white;
+    overflow-y: auto;
+
+    .contact {
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: #1db954; /* Spotify green on hover */
+        color: black;
+      }
+    }
+  }
+
+  /* ChatContainer */
+  .chat-container {
+    background-color: #121212;
+    color: white;
+    overflow-y: auto;
+    padding: 20px;
   }
 `;

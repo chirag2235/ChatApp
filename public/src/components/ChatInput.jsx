@@ -51,93 +51,86 @@ export default function ChatInput({ handleSendMsg }) {
 const Container = styled.div`
   display: grid;
   align-items: center;
-  grid-template-columns: 5% 95%;
-  background-color: #080420;
-  padding: 0 2rem;
-  @media screen and (min-width: 720px) and (max-width: 1080px) {
-    padding: 0 1rem;
-    gap: 1rem;
+  grid-template-columns: 10% 90%;
+  background-color: #191414;
+  padding: 1rem 2rem;
+  border-top: 1px solid #282828;
+
+  @media screen and (max-width: 720px) {
+    grid-template-columns: 15% 85%;
+    padding: 0.5rem 1rem;
   }
+
   .button-container {
     display: flex;
     align-items: center;
-    color: white;
-    gap: 1rem;
+    color: #b3b3b3;
     .emoji {
       position: relative;
+
       svg {
-        font-size: 1.5rem;
-        color: #ffff00c8;
+        font-size: 1.8rem;
+        color: #1db954;
         cursor: pointer;
-      }
-      .emoji-picker-react {
-        position: absolute;
-        top: -350px;
-        background-color: #080420;
-        box-shadow: 0 5px 10px #9a86f3;
-        border-color: #9a86f3;
-        .emoji-scroll-wrapper::-webkit-scrollbar {
-          background-color: #080420;
-          width: 5px;
-          &-thumb {
-            background-color: #9a86f3;
-          }
-        }
-        .emoji-categories {
-          button {
-            filter: contrast(0);
-          }
-        }
-        .emoji-search {
-          background-color: transparent;
-          border-color: #9a86f3;
-        }
-        .emoji-group:before {
-          background-color: #080420;
+        transition: color 0.3s ease, transform 0.3s ease;
+
+        &:hover {
+          color: #1ed760;
+          transform: scale(1.2);
         }
       }
     }
   }
+
   .input-container {
-    width: 100%;
-    border-radius: 2rem;
     display: flex;
     align-items: center;
-    gap: 2rem;
-    background-color: #ffffff34;
+    gap: 1rem;
+    background-color: #282828;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+
     input {
-      width: 90%;
-      height: 60%;
+      flex: 1;
       background-color: transparent;
-      color: white;
+      color: #ffffff;
       border: none;
+      font-size: 1rem;
       padding-left: 1rem;
-      font-size: 1.2rem;
 
       &::selection {
-        background-color: #9a86f3;
+        background-color: #1db954;
+        color: #000;
       }
+
       &:focus {
         outline: none;
       }
     }
+
     button {
-      padding: 0.3rem 2rem;
-      border-radius: 2rem;
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: #9a86f3;
+      padding: 0.5rem 1rem;
       border: none;
-      @media screen and (min-width: 720px) and (max-width: 1080px) {
-        padding: 0.3rem 1rem;
-        svg {
-          font-size: 1rem;
-        }
-      }
+      border-radius: 2rem;
+      background-color: #1db954;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+
       svg {
-        font-size: 2rem;
-        color: white;
+        color: #fff;
+        font-size: 1.5rem;
+      }
+
+      &:hover {
+        background-color: #1ed760;
+        transform: scale(1.1);
+      }
+
+      &:active {
+        background-color: #14833b;
       }
     }
   }

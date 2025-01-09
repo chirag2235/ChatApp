@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { useNavigate, Link } from "react-router-dom";
-import Logo from "../assets/logo.svg";
+import Logo from "../assets/logo.png";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { loginRoute } from "../utils/APIRoutes";
@@ -21,7 +21,7 @@ export default function Login() {
     if (localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
       navigate("/");
     }
-  }, []);
+  }, [navigate]);
 
   const handleChange = (event) => {
     setValues({ ...values, [event.target.name]: event.target.value });
@@ -67,7 +67,7 @@ export default function Login() {
         <form action="" onSubmit={(event) => handleSubmit(event)}>
           <div className="brand">
             <img src={Logo} alt="logo" />
-            <h1>chatapp</h1>
+            <h1>Talkify</h1>
           </div>
           <input
             type="text"
@@ -101,18 +101,23 @@ const FormContainer = styled.div`
   justify-content: center;
   gap: 1rem;
   align-items: center;
-  background-color: #131324;
+  background-color: #121212; /* Spotify dark background */
+
   .brand {
     display: flex;
     align-items: center;
     gap: 1rem;
     justify-content: center;
+
     img {
       height: 5rem;
     }
+
     h1 {
-      color: white;
+      color: #1db954; /* Spotify green */
       text-transform: uppercase;
+      font-size: 2rem;
+      font-weight: bold;
     }
   }
 
@@ -120,44 +125,57 @@ const FormContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    background-color: #00000076;
-    border-radius: 2rem;
-    padding: 5rem;
-  }
-  input {
-    background-color: transparent;
-    padding: 1rem;
-    border: 0.1rem solid #4e0eff;
-    border-radius: 0.4rem;
-    color: white;
-    width: 100%;
-    font-size: 1rem;
-    &:focus {
-      border: 0.1rem solid #997af0;
-      outline: none;
+    background-color: #181818; /* Slightly darker card background */
+    border-radius: 1rem;
+    padding: 4rem 3rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+
+    input {
+      background-color: #282828; /* Neutral input background */
+      padding: 1rem;
+      border: 0.1rem solid #1db954; /* Spotify green border */
+      border-radius: 0.5rem;
+      color: white;
+      font-size: 1rem;
+
+      &:focus {
+        border-color: #1ed760; /* Lighter green focus border */
+        outline: none;
+        background-color: #333333; /* Slightly darker background on focus */
+      }
     }
-  }
-  button {
-    background-color: #4e0eff;
-    color: white;
-    padding: 1rem 2rem;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 0.4rem;
-    font-size: 1rem;
-    text-transform: uppercase;
-    &:hover {
-      background-color: #4e0eff;
-    }
-  }
-  span {
-    color: white;
-    text-transform: uppercase;
-    a {
-      color: #4e0eff;
-      text-decoration: none;
+
+    button {
+      background-color: #1db954; /* Spotify green button */
+      color: #ffffff;
+      padding: 1rem 2rem;
+      border: none;
       font-weight: bold;
+      cursor: pointer;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      text-transform: uppercase;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #1ed760; /* Lighter green on hover */
+      }
+    }
+
+    span {
+      color: #ffffff;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+
+      a {
+        color: #1db954;
+        text-decoration: none;
+        font-weight: bold;
+
+        &:hover {
+          color: #1ed760; /* Lighter green on hover */
+        }
+      }
     }
   }
 `;
