@@ -42,7 +42,7 @@ export default function Chat() {
   }, [currentUser]);
   const handleIncomingCall=({to,offer})=>{
     setReceieveOffer(offer);
-      console.log("Received call from", to,receieveOffer); // Debugging line
+      console.log("Received call from", to,offer); // Debugging line
       setVideoCallUser(to);
   } 
   useEffect(() => {
