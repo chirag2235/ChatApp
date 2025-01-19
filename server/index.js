@@ -30,8 +30,8 @@ const server = app.listen(process.env.PORT, () =>
 );
 const io = socket(server, {
   cors: {
-    origin: "https://talkify-pbq8.onrender.com",
-    // origin:"http://localhost:5173",
+    // origin: "https://talkify-pbq8.onrender.com",
+    origin:"http://localhost:5173",
     credentials: true,
     
   },
@@ -45,7 +45,7 @@ io.on("connection", (socket) => {
   });
   socket.on("call:ringing", ({ from, to,offer }) => {
     const reciever = onlineUsers.get(to._id);
-    console.log("Receiver socket ID: offer", reciever,offer); 
+    console.log("Receiver socket ID: offer", reciever); 
     if (reciever) {
       socket.to(reciever).emit("incoming:call", {to:from,offer});
       console.log(`Ringing user ${to}`);
