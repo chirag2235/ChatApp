@@ -24,13 +24,11 @@ const VideoCall = ({ socket, from, to, call, failCall, receiveOffer }) => {
   );
 
   const acceptCall = useCallback(async () => {
+    console.log("Accept call clicked");
     try {
-      // Ensure media stream is obtained
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-      setMyStream(stream);
       sendStream(stream);
-
-      // Wait for the answer to be created
+      setMyStream(stream);
       const answer = await peer.getAnswer(receiveOffer);
       socket.current.emit("call:accept", { from, to, ans: answer });
       setUserAccept(true);
