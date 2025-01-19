@@ -30,6 +30,7 @@ const VideoCall = ({ socket, from, to, call, failCall, receiveOffer }) => {
       sendStream(stream);
       setMyStream(stream);
       const answer = await peer.getAnswer(receiveOffer);
+      console.log("Answer:", answer);
       socket.current.emit("call:accept", { from, to, ans: answer });
       setUserAccept(true);
     } catch (error) {
@@ -92,7 +93,6 @@ const VideoCall = ({ socket, from, to, call, failCall, receiveOffer }) => {
     if (socket.current) {
       socket.current.on("call:accepted", handleCallAccepted);
       socket.current.on("call:failed", handleCallFailed);
-
       return () => {
         socket.current.off("call:accepted", handleCallAccepted);
         socket.current.off("call:failed", handleCallFailed);
