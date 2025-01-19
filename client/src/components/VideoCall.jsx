@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import ReactPlayer from 'react-player';
-import peer from '../services/peer';
+import React, { useCallback, useEffect, useState } from "react";
+import ReactPlayer from "react-player";
+import peer from "../services/peer";
 
 const VideoCall = ({ socket, from, to, call, failCall, receiveOffer }) => {
   const [userAccept, setUserAccept] = useState(null);
@@ -25,28 +25,32 @@ const VideoCall = ({ socket, from, to, call, failCall, receiveOffer }) => {
 
   const acceptCall = useCallback(async () => {
     try {
+      // Ensure media stream is obtained
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
       setMyStream(stream);
       sendStream(stream);
 
+      // Wait for the answer to be created
       const answer = await peer.getAnswer(receiveOffer);
-      socket.current.emit('call:accept', { from, to, ans: answer });
+      socket.current.emit("call:accept", { from, to, ans: answer });
       setUserAccept(true);
     } catch (error) {
-      console.error('Error accepting call:', error);
+      console.error("Error accepting call:", error);
     }
   }, [receiveOffer, from, to, sendStream, socket]);
 
   const calling = useCallback(async () => {
     try {
+      // Ensure media stream is obtained
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
       setMyStream(stream);
       sendStream(stream);
 
+      // Wait for the offer to be created
       const offer = await peer.getOffer();
-      socket.current.emit('call:ringing', { from, to, offer });
+      socket.current.emit("call:ringing", { from, to, offer });
     } catch (error) {
-      console.error('Error initiating call:', error);
+      console.error("Error initiating call:", error);
     }
   }, [from, to, sendStream, socket]);
 
@@ -56,13 +60,19 @@ const VideoCall = ({ socket, from, to, call, failCall, receiveOffer }) => {
   }, []);
 
   const handleNegotiationNeeded = useCallback(async () => {
-    const offer = peer.localDescription;
-    socket.current.emit('peer:nego:needed', { from, to, off: offer });
+    const offer = peer.peer.localDescription;
+    if (offer) {
+      socket.current.emit("peer:nego:needed", { from, to, off: offer });
+    }
   }, [from, to, socket]);
 
   const handleCallAccepted = useCallback(async ({ ans }) => {
-    await peer.setRemoteAns(ans);
-    setUserAccept(true);
+    try {
+      await peer.setRemoteAns(ans);
+      setUserAccept(true);
+    } catch (error) {
+      console.error("Error handling call acceptance:", error);
+    }
   }, []);
 
   const handleCallFailed = useCallback(() => {
@@ -71,23 +81,23 @@ const VideoCall = ({ socket, from, to, call, failCall, receiveOffer }) => {
   }, [failCall]);
 
   useEffect(() => {
-    peer.peer.addEventListener('track', handleTrackEvent);
-    peer.peer.addEventListener('negotiationneeded', handleNegotiationNeeded);
+    peer.peer.addEventListener("track", handleTrackEvent);
+    peer.peer.addEventListener("negotiationneeded", handleNegotiationNeeded);
 
     return () => {
-      peer.peer.removeEventListener('track', handleTrackEvent);
-      peer.peer.removeEventListener('negotiationneeded', handleNegotiationNeeded);
+      peer.peer.removeEventListener("track", handleTrackEvent);
+      peer.peer.removeEventListener("negotiationneeded", handleNegotiationNeeded);
     };
-  }, [handleTrackEvent, handleNegotiationNeeded,peer]);
+  }, [handleTrackEvent, handleNegotiationNeeded]);
 
   useEffect(() => {
     if (socket.current) {
-      socket.current.on('call:accepted', handleCallAccepted);
-      socket.current.on('call:failed', handleCallFailed);
+      socket.current.on("call:accepted", handleCallAccepted);
+      socket.current.on("call:failed", handleCallFailed);
 
       return () => {
-        socket.current.off('call:accepted', handleCallAccepted);
-        socket.current.off('call:failed', handleCallFailed);
+        socket.current.off("call:accepted", handleCallAccepted);
+        socket.current.off("call:failed", handleCallFailed);
       };
     }
   }, [socket, handleCallAccepted, handleCallFailed]);
@@ -123,7 +133,6 @@ const VideoCall = ({ socket, from, to, call, failCall, receiveOffer }) => {
           <ReactPlayer playing muted height="300px" width="300px" url={remoteStream} />
         </>
       )}
-      <button onClick={sendStream}>Reconnect</button>
     </div>
   );
 };
