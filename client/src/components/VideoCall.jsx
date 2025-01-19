@@ -78,7 +78,7 @@ const VideoCall = ({ socket, from, to, call, failCall, receiveOffer }) => {
       peer.peer.removeEventListener('track', handleTrackEvent);
       peer.peer.removeEventListener('negotiationneeded', handleNegotiationNeeded);
     };
-  }, [handleTrackEvent, handleNegotiationNeeded]);
+  }, [handleTrackEvent, handleNegotiationNeeded,peer]);
 
   useEffect(() => {
     if (socket.current) {
@@ -123,6 +123,7 @@ const VideoCall = ({ socket, from, to, call, failCall, receiveOffer }) => {
           <ReactPlayer playing muted height="300px" width="300px" url={remoteStream} />
         </>
       )}
+      <button onClick={sendStream}>Reconnect</button>
     </div>
   );
 };
