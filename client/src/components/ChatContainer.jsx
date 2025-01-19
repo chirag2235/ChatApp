@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import ChatInput from "./ChatInput";
-import Logout from "./Logout";
 import { IoVideocamOutline } from "react-icons/io5";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
@@ -18,16 +17,18 @@ export default function ChatContainer({ currentChat, socket ,call}) {
     draggable: true,
     theme: "dark",
   };
-  useEffect(async () => {
-    const data = await JSON.parse(
-      localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-    );
-    const response = await axios.post(recieveMessageRoute, {
-      from: data._id,
-      to: currentChat._id,
-    });
-    setMessages(response.data);
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const data = await JSON.parse(localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY));
+      const response = await axios.post(recieveMessageRoute, {
+        from: data._id,
+        to: currentChat._id,
+      });
+      setMessages(response.data);
+    };
+    fetchMessages();
   }, [currentChat]);
+  
 
   useEffect(() => {
     const getCurrentChat = async () => {
@@ -41,23 +42,24 @@ export default function ChatContainer({ currentChat, socket ,call}) {
   }, [currentChat]);
 
   const handleSendMsg = async (msg) => {
-    const data = await JSON.parse(
-      localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-    );
-    socket.current.emit("send-msg", {
-      to: currentChat._id,
-      from: data._id,
-      msg,
-    });
-    await axios.post(sendMessageRoute, {
-      from: data._id,
-      to: currentChat._id,
-      message: msg,
-    });
-
-    const msgs = [...messages];
-    msgs.push({ fromSelf: true, message: msg });
-    setMessages(msgs);
+    try {
+      const data = JSON.parse(localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY));
+      socket.current.emit("send-msg", {
+        to: currentChat._id,
+        from: data._id,
+        msg,
+      });
+  
+      const response = await axios.post(sendMessageRoute, {
+        from: data._id,
+        to: currentChat._id,
+        message: msg,
+      });
+  
+      setMessages((prev) => [...prev, { fromSelf: true, message: msg }]);
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    }
   };
   const handleVideoCall=()=>{
     call(currentChat);

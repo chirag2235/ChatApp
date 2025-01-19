@@ -21,8 +21,8 @@ export default function Chat() {
   const [currentUser, setCurrentUser] = useState(undefined);
   const [currVideoCallUser,setVideoCallUser]=useState(false);
   //by default it is caller means false
-  const [isCallReceiver,setIsCallReceiver]=useState(false);
   const [failCall, setFailCall] = useState(null);
+  const [receieveOffer,setReceieveOffer]=useState(null);
   
   useEffect(() => {
     if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
@@ -40,14 +40,17 @@ export default function Chat() {
       socket.current.emit("add-user", currentUser._id);
     }
   }, [currentUser]);
-  const handleIncomingCall=(from)=>{
-      console.log("Received call from", from); // Debugging line
-      setIsCallReceiver(true);
-      setVideoCallUser(from);
+  const handleIncomingCall=({to,offer})=>{
+    setReceieveOffer(offer);
+      console.log("Received call from", to,receieveOffer); // Debugging line
+      setVideoCallUser(to);
   } 
   useEffect(() => {
     if (socket.current) {
       socket.current.on("incoming:call",handleIncomingCall);
+      return () => { 
+        socket.current.off("incoming:call",handleIncomingCall);
+      }
     }
   }, [socket,handleIncomingCall]);
   
@@ -108,7 +111,7 @@ export default function Chat() {
             <ChatContainer currentChat={currentChat} socket={socket} call={handleVideoCall}/>
           )}
           {
-            currVideoCallUser && <VideoCall socket={socket} from={currentUser} to={currVideoCallUser} call={handleVideoCall} callReceiver={isCallReceiver} failCall={setFailCall}/>
+            currVideoCallUser && <VideoCall socket={socket} from={currentUser} to={currVideoCallUser} call={handleVideoCall} failCall={setFailCall} receiveOffer={receieveOffer}/>
           }
           <ToastContainer />
         </div>
