@@ -31,7 +31,7 @@ const server = app.listen(process.env.PORT, () =>
 const io = socket(server, {
   cors: {
     // origin: "https://talkify-pbq8.onrender.com",
-    // origin:"http://localhost:5173",
+    origin:"http://localhost:5173",
     origin:"https://talkify-delta.vercel.app",
     credentials: true,
     
