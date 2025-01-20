@@ -7,7 +7,7 @@ class PeerService{
                   { urls: 'stun:stun2.l.google.com:19302' },
                   { urls: 'stun:stun3.l.google.com:19302' },
                   { urls: 'stun:stun4.l.google.com:19302' },
-                ]
+                  ]    
               });
         }
     }
@@ -15,7 +15,7 @@ class PeerService{
     async getOffer(){
         if(this.peer){
             const offer=await this.peer.createOffer();
-            await this.peer.setLocalDescription(new RTCSessionDescription(offer));
+            await this.peer.setLocalDescription(offer);
             return offer;
         }
     }
@@ -24,14 +24,14 @@ class PeerService{
             // their offer
             await this.peer.setRemoteDescription(offer);
             const ans=await this.peer.createAnswer();
-            await this.peer.setLocalDescription(new RTCSessionDescription(ans));
+            await this.peer.setLocalDescription(ans);
             return ans;
         }
     }
 
     async setRemoteAns(ans){
         if(this.peer){
-            await this.peer.setRemoteDescription(new RTCSessionDescription(ans));
+            await this.peer.setRemoteDescription(ans);
         }
     }
 
