@@ -60,7 +60,10 @@ const VideoCall = ({ socket, from, to, call, failCall, receiveOffer }) => {
   }, []);
 
   const handleNegotiationNeeded = useCallback(async () => {
-    acceptCall();
+    const offer = peer.peer.localDescription;
+    if (offer) {
+      socket.current.emit("peer:nego:needed", { from, to, off: offer });
+    }
   }, [from, to, socket]);
 
   const handleCallAccepted = useCallback(async ({ ans }) => {
@@ -90,9 +93,11 @@ const VideoCall = ({ socket, from, to, call, failCall, receiveOffer }) => {
     if (socket.current) {
       socket.current.on("call:accepted", handleCallAccepted);
       socket.current.on("call:failed", handleCallFailed);
+      socket.current.on("peer:nego:final",handleCallAccepted);
       return () => {
         socket.current.off("call:accepted", handleCallAccepted);
         socket.current.off("call:failed", handleCallFailed);
+        socket.current.off("peer:nego:final",handleCallAccepted);
       };
     }
   }, [socket, handleCallAccepted, handleCallFailed]);

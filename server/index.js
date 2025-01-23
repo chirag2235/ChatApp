@@ -66,7 +66,7 @@ io.on("connection", (socket) => {
 
   socket.on("peer:nego:needed", ({ from, to,off }) => {
     const reciever = onlineUsers.get(to._id);
-    io.to(reciever).emit("peer:nego:need",{from,off});
+    io.to(reciever).emit("peer:nego:final",{from,off});
   });
 
   socket.on("peer:nego:done",({to,from,ans})=>{
