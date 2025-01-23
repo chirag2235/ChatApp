@@ -9,9 +9,10 @@ const VideoCall = ({ socket, from, to, call, failCall, receiveOffer }) => {
 
   const terminateCall = () => {
     call(false);
-    peer.peer.close();
     setMyStream(null);
     setRemoteStream(null);
+    peer.peer.close();
+    
   };
 
   const sendStream = useCallback(
@@ -59,10 +60,7 @@ const VideoCall = ({ socket, from, to, call, failCall, receiveOffer }) => {
   }, []);
 
   const handleNegotiationNeeded = useCallback(async () => {
-    const offer = peer.peer.localDescription;
-    if (offer) {
-      socket.current.emit("peer:nego:needed", { from, to, off: offer });
-    }
+    acceptCall();
   }, [from, to, socket]);
 
   const handleCallAccepted = useCallback(async ({ ans }) => {
@@ -82,7 +80,6 @@ const VideoCall = ({ socket, from, to, call, failCall, receiveOffer }) => {
   useEffect(() => {
     peer.peer.addEventListener("track", handleTrackEvent);
     peer.peer.addEventListener("negotiationneeded", handleNegotiationNeeded);
-
     return () => {
       peer.peer.removeEventListener("track", handleTrackEvent);
       peer.peer.removeEventListener("negotiationneeded", handleNegotiationNeeded);
