@@ -34,7 +34,8 @@ const Container = styled.div`
   flex-direction: column;
   background-color: #191414; /* Spotify dark background */
   color: #b3b3b3; /* Muted gray text */
-  height: 100vh;
+  height: 100%;
+  width: 100%;
   text-align: center;
 
   img {

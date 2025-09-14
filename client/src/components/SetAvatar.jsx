@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import axios from "axios";
-import { Buffer } from "buffer";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { setAvatarRoute } from "../utils/APIRoutes";
 import Loader from "../assets/loader";
+import multiavatar from "@multiavatar/multiavatar"; // <--- New import
+import axios from "axios"; // Keep axios for the post request
+
 export default function SetAvatar() {
-  const api = `https://api.multiavatar.com/4645646`;
   const navigate = useNavigate();
   const [avatars, setAvatars] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -21,10 +21,11 @@ export default function SetAvatar() {
     theme: "dark",
   };
 
-  useEffect(async () => {
-    if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY))
+  useEffect(() => {
+    if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
       navigate("/login");
-  }, []);
+    }
+  }, [navigate]);
 
   const setProfilePicture = async () => {
     if (selectedAvatar === undefined) {
@@ -52,24 +53,27 @@ export default function SetAvatar() {
     }
   };
 
-  useEffect(async () => {
-    const data = [];
-    for (let i = 0; i < 4; i++) {
-      const image = await axios.get(
-        `${api}/${Math.round(Math.random() * 1000)}`
-      );
-      const buffer = new Buffer(image.data);
-      data.push(buffer.toString("base64"));
-    }
-    setAvatars(data);
-    setIsLoading(false);
+  useEffect(() => {
+    const fetchAvatars = () => {
+      const data = [];
+      for (let i = 0; i < 4; i++) {
+        const seed = Math.random().toString(36).substring(2, 15);
+        const svgCode = multiavatar(seed);
+        const base64Avatar = btoa(svgCode);
+        data.push(base64Avatar);
+      }
+      setAvatars(data);
+      setIsLoading(false);
+    };
+
+    fetchAvatars();
   }, []);
+
   return (
     <>
       {isLoading ? (
         <Container>
-          {/* <img src={loader} alt="loader" className="loader" /> */}
-          <Loader/>
+          <Loader />
         </Container>
       ) : (
         <Container>
@@ -83,11 +87,11 @@ export default function SetAvatar() {
                   className={`avatar ${
                     selectedAvatar === index ? "selected" : ""
                   }`}
+                  key={index} // Added key prop for best practice
                 >
                   <img
                     src={`data:image/svg+xml;base64,${avatar}`}
                     alt="avatar"
-                    key={avatar}
                     onClick={() => setSelectedAvatar(index)}
                   />
                 </div>
@@ -110,7 +114,7 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   gap: 3rem;
-  background-color: #121212; /* Spotify dark background */
+  background-color: #121212;
   height: 100vh;
   width: 100vw;
 
@@ -120,7 +124,7 @@ const Container = styled.div`
 
   .title-container {
     h1 {
-      color: #ffffff; /* White text */
+      color: #ffffff;
       font-size: 2rem;
       text-align: center;
       font-weight: bold;
@@ -146,13 +150,13 @@ const Container = styled.div`
     }
 
     .selected {
-      border: 0.4rem solid #1db954; /* Spotify green for selected avatar */
+      border: 0.4rem solid #1db954;
     }
   }
 
   .submit-btn {
-    background-color: #1db954; /* Spotify green */
-    color: #ffffff; /* White text */
+    background-color: #1db954;
+    color: #ffffff;
     padding: 1rem 2rem;
     border: none;
     font-weight: bold;
@@ -163,7 +167,7 @@ const Container = styled.div`
     transition: background-color 0.3s ease-in-out;
 
     &:hover {
-      background-color: #148c3a; /* Darker green for hover effect */
+      background-color: #148c3a;
     }
   }
 `;

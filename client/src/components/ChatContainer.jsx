@@ -128,6 +128,7 @@ const Container = styled.div`
   gap: 0.1rem;
   overflow: hidden;
   padding:0.5rem;
+  height: 100%;
   background-color: #121212; /* Spotify-like dark background */
 
   @media screen and (min-width: 720px) and (max-width: 1080px) {

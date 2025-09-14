@@ -113,7 +113,6 @@ export default function Chat() {
           {
             currVideoCallUser && <VideoCall socket={socket} from={currentUser} to={currVideoCallUser} call={handleVideoCall} failCall={setFailCall} receiveOffer={receieveOffer}/>
           }
-          <ToastContainer />
         </div>
       </Container>
     </>
@@ -182,8 +181,8 @@ const Container = styled.div`
   }
 
   .container {
-    height: 90vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
     background: linear-gradient(135deg, #181818, #282828); /* Gradient background */
     display: grid;
     grid-template-columns: 25% 75%;
