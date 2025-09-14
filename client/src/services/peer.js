@@ -7,6 +7,7 @@ class PeerService{
                   { urls: 'stun:stun2.l.google.com:19302' },
                   { urls: 'stun:stun3.l.google.com:19302' },
                   { urls: 'stun:stun4.l.google.com:19302' },
+                  { urls: 'turn:relay1.expressturn.com:3478', credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=', username: 'ef4b3b3c8d5c2b08c7e5db1f' }
                   ]    
               });
         }
